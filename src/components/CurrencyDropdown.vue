@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown" @click="toggleDropdown">
+  <div class="dropdown" @click="toggleDropdown" :id="dropdownId">
     <div class="dropdown-header">
       <span>{{ modelValue }}</span>
       <i class="arrow" :class="{ open: isOpen }"></i>
@@ -18,37 +18,53 @@
 </template>
 
 <script setup lang="ts">
-import { CURRENCIES } from '@/config/currencies'
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { CURRENCIES } from '@/config/currencies';
+import { ref, watch, defineProps, defineEmits, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
   modelValue: {
     type: String,
     required: true,
   },
-})
+});
+const generateId = () => {
+  return 'dropdown-' + Math.random().toString(36).slice(2, 11);
+};
 
-const emit = defineEmits(['update:modelValue'])
+const dropdownId = ref(generateId());
+const emit = defineEmits(['update:modelValue']);
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
 const toggleDropdown = () => {
-  isOpen.value = !isOpen.value
-}
+  isOpen.value = !isOpen.value;
+};
 
 const selectCurrency = (currency: string) => {
-  emit('update:modelValue', currency)
-  isOpen.value = false
-}
+  emit('update:modelValue', currency);
+  isOpen.value = false;
+};
 
 watch(
   () => props.modelValue,
   (newVal) => {
     if (!CURRENCIES.includes(newVal)) {
-      emit('update:modelValue', CURRENCIES[0])
+      emit('update:modelValue', CURRENCIES[0]);
     }
   },
-)
+);
+const handleClickOutside = (event: Event) => {
+  const parent = (event.target as HTMLElement).closest(`#${dropdownId.value}`);
+  if (!parent) {
+    isOpen.value = false;
+  }
+};
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>

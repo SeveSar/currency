@@ -45,9 +45,17 @@ const convertFrom = () => {
   fromAmount.value = parseFloat((toAmount.value * rate).toFixed(2));
 };
 
-watch([fromCurrency, toCurrency, () => currencyStore.apiRates], () => {
+watch([fromCurrency, toCurrency], () => {
   convertTo();
 });
+
+watch(
+  () => currencyStore.apiRates,
+  () => {
+    convertTo();
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
