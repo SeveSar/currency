@@ -1,0 +1,12 @@
+/* Основная тема */
+:root {
+  --background-color: #f4f4f9;
+  --primary-color: #5a67d8;
+  --secondary-color: #4a5568;
+  --text-color: #2d3748;
+  --light-text-color: #a0aec0;
+  --input-border-color: #cbd5e0;
+  --input-focus-border-color: #5a67d8;
+  --header-bg-color: #2d3748;
+  --header-text-color: #ffffff;
+}
